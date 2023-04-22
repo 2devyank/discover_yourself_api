@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-const SECRET_Key = 'devyanknagpal';
+export const SECRET_Key = 'devyanknagpal';
 const registeruser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -13,8 +13,7 @@ const registeruser = async (req, res) => {
         }
         const hashpassword = await bcrypt.hash(password, 10);
         const result = await pool.query("INSERT INTO PROFILE (email,password) VALUES($1,$2)", [email, hashpassword]);
-        const rest = result.rows;
-        res.json(rest);
+        res.json(result);
     }
     catch (error) {
         console.log(error);
@@ -43,4 +42,14 @@ const loginuser = async (req, res) => {
         console.log(error);
     }
 };
-export { registeruser, loginuser };
+const getuser = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const ret = await pool.query('select * from profile where id=$1', [id]);
+        res.json(ret.rows);
+    }
+    catch (error) {
+        console.log(error);
+    }
+};
+export { registeruser, loginuser, getuser };
