@@ -13,11 +13,13 @@ app.use(express.json());
 
 import {pool} from "./Database.js";
 import router from "./router/UserRouter.js";
+import projectrouter from "./router/ProjectRouter.js";
 
 
 
 const PORT=process.env.PORT;
 app.use("/",router)
+app.use("/",projectrouter)
 
 
 app.post("/",(req:Request,res:Response)=>{

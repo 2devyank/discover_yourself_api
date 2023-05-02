@@ -3,13 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-import cloudinary from "cloudinary";
 export const SECRET_Key = 'devyanknagpal';
-cloudinary.v2.config({
-    cloud_name: "deoycapon",
-    api_key: "316755458256892",
-    api_secret: "DcGs6bxBpnM6pw7UkMjFPXXymps"
-});
 const registeruser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -61,7 +55,7 @@ const getuser = async (req, res) => {
 };
 const updateuser = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = res.locals.JwtPayload.user;
         const { name, email, skills, portfoilo, expertise, about } = req.body;
         const ret = await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 where id=$7', [name, email, skills, portfoilo, expertise, about, id]);
         res.json(ret.rows);
@@ -70,16 +64,4 @@ const updateuser = async (req, res) => {
         console.log(error);
     }
 };
-const uploadimage = async (req, res) => {
-    const { img, name, id } = req.body;
-    const result = cloudinary.v2.uploader.upload(img);
-    result.then((data) => {
-        console.log(data);
-        console.log(data.secure_url);
-        const t = pool.query('update profile set img=$1,name=$2 where id=$3 ', [data.secure_url, name, id]);
-        res.json({ message: "updated" });
-    }).catch((err) => {
-        console.log(err);
-    });
-};
-export { registeruser, loginuser, getuser, uploadimage, updateuser };
+export { registeruser, loginuser, getuser, updateuser };

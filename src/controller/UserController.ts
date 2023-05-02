@@ -5,17 +5,11 @@ import jwt,{Secret} from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-import cloudinary from "cloudinary"
+
 import { CustomRequest } from "../middleware/ValidateToken.js";
 export const SECRET_Key:Secret='devyanknagpal';
 
 
-
-cloudinary.v2.config({
-    cloud_name: "deoycapon",
-  api_key: "316755458256892",
-  api_secret: "DcGs6bxBpnM6pw7UkMjFPXXymps"
-  });
 
 
 const registeruser =async(req:Request,res:Response)=>{
@@ -74,7 +68,7 @@ console.log(error);
 
 const updateuser=async(req:Request,res:Response)=>{
     try{
-        const {id}=req.params;
+        const {id}=res.locals.JwtPayload.user;
 const {name,email,skills,portfoilo,expertise,about}=req.body;
 const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 where id=$7',[name,email,skills,portfoilo,expertise,about,id])
    res.json(ret.rows)
@@ -83,21 +77,6 @@ const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfo
     }
 }
 
-const uploadimage=async(req:Request,res:Response)=>{
-    const {img,name,id}=req.body;
-    const result = cloudinary.v2.uploader.upload(img)
-
-    result.then((data) => {
-      console.log(data);
-      console.log(data.secure_url);
-      const t= pool.query('update profile set img=$1,name=$2 where id=$3 ',[data.secure_url,name,id])
-      res.json({message:"updated"})
-    }).catch((err) => {
-      console.log(err);
-    });
 
 
-
-  
-}
-export {registeruser,loginuser,getuser,uploadimage,updateuser};
+export {registeruser,loginuser,getuser,updateuser};
