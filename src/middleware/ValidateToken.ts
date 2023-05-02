@@ -5,6 +5,15 @@ import { SECRET_Key } from "../controller/UserController.js";
 export interface CustomRequest extends Request{
     token:string|JwtPayload;
 }
+interface Big{
+    user:u,
+    iat:string,
+    exp:string
+}
+interface u{
+    name:string,
+    eamil:string,id:number
+}
 const validateUser=async(req:Request,res:Response,next:NextFunction)=>{
 try{
 
@@ -12,12 +21,14 @@ try{
    
     if(!token){
         res.status(401);
-        throw new Error();
+        throw new Error("Token not found");
     }
     const decoded=jwt.verify(token,SECRET_Key);
-    console.log(decoded);
-    (req as CustomRequest).token=decoded;
-    console.log(req);
+    // console.log(decoded);
+    // (req as CustomRequest).token=decoded;
+    res.locals.JwtPayload=decoded;
+    res.locals.user=res.locals.JwtPayload.data;
+    console.log(res.locals.JwtPayload.user.id);
     next();
 }catch(error){
     console.log(error);
