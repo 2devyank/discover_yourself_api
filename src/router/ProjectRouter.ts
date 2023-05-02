@@ -5,9 +5,9 @@ const projectrouter=express.Router();
 
 
 
-projectrouter.route("/project/add").post(validateUser,postproject);
-projectrouter.route("/project/get").get(validateUser,getproject);
-projectrouter.route("/project/put/:id").put(updateproject);
-projectrouter.route("/project/delete/:id").delete(deleteproject);
+projectrouter.route("/project").post(validateUser,postproject);
+projectrouter.route("/project").get(validateUser,getproject);
+projectrouter.route("/project/:id").put(updateproject);
+projectrouter.route("/project/:id").delete(deleteproject);
 
 export default projectrouter;
