@@ -10,9 +10,11 @@ app.use(cors());
 app.use(express.json());
 import router from "./router/UserRouter.js";
 import projectrouter from "./router/ProjectRouter.js";
+import exprouter from "./router/ExpRouter.js";
 const PORT = process.env.PORT;
 app.use("/", router);
 app.use("/", projectrouter);
+app.use("/", exprouter);
 app.post("/", (req, res) => {
     res.send("meassage posted");
 });

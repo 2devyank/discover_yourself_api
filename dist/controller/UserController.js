@@ -55,7 +55,7 @@ const getuser = async (req, res) => {
 };
 const updateuser = async (req, res) => {
     try {
-        const { id } = res.locals.JwtPayload.user;
+        const { id } = req.params;
         const { name, email, skills, portfoilo, expertise, about } = req.body;
         const ret = await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 where id=$7', [name, email, skills, portfoilo, expertise, about, id]);
         res.json(ret.rows);

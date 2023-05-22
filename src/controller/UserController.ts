@@ -57,7 +57,8 @@ if(!email||!password){
 const getuser=async(req:Request,res:Response)=>{
     try{
 const {id}=res.locals.JwtPayload.user;
-console.log(id)
+console.log(id);
+
 const ret=await pool.query('select * from profile where id=$1',[id])
 res.json(ret.rows[0])
     }catch(error){
@@ -68,8 +69,10 @@ console.log(error);
 
 const updateuser=async(req:Request,res:Response)=>{
     try{
-        const {id}=res.locals.JwtPayload.user;
-const {name,email,skills,portfoilo,expertise,about}=req.body;
+       
+const {id}=req.params;
+
+        const {name,email,skills,portfoilo,expertise,about}=req.body;
 const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 where id=$7',[name,email,skills,portfoilo,expertise,about,id])
    res.json(ret.rows)
 }catch(error){

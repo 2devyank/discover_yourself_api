@@ -5,6 +5,9 @@ import { validateUser } from '../middleware/ValidateToken.js';
 const exprouter=express.Router();
 
 
-exprouter.route("/exp").post(validateUser,postexp).get(validateUser,getexp)
+exprouter.route("/exp").post(validateUser,postexp);
+exprouter.route("/exp").get(validateUser,getexp);
 
 exprouter.route("/exp/:id").put(updateexp).delete(deleteexp);
+
+export default exprouter;

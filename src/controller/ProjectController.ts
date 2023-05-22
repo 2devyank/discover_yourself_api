@@ -25,7 +25,7 @@ console.log(error);
 const updateproject=async(req:Request,res:Response)=>{
     try{
         const {id}=req.params;
-    
+  
         const {title,description,tags,source,deploy}=req.body;
         const result=pool.query('update project set title=$1,description=$2,tags=$3,source=$4,deploy=$5 where projectid=$6',[title,description,tags,source,deploy,id])
     res.json(result);
