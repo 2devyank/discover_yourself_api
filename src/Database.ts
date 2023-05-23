@@ -1,4 +1,5 @@
-import pg from "pg";
+// import pg from "pg";
+const pg=require('pg');
 
 const pool=new pg.Pool({
     user:"devyanknagpal",
@@ -8,4 +9,4 @@ const pool=new pg.Pool({
     database:"intern"
 })
 
-export { pool};
+module.exports=pool;

@@ -1,7 +1,8 @@
-import { pool } from "../Database.js";
-import {Response,Request} from "express";
+// import { pool } from "../Database.js";
+const pool=require('../Database')
+// import {Response,Request} from "express";
 
-const postexp=async(req:Request,res:Response)=>{
+const postexp=async(req:any,res:any)=>{
     try{
         const {id}=res.locals.JwtPayload.user;
 const {position,organization,role,start,last}=req.body;
@@ -12,7 +13,7 @@ console.log(error);
     }
 }
 
-const updateexp=async(req:Request,res:Response)=>{
+const updateexp=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
         const {position,organization,role,start,last}=req.body;
@@ -23,7 +24,7 @@ console.log(error);
     }
 }
 
-const getexp=async(req:Request,res:Response)=>{
+const getexp=async(req:any,res:any)=>{
     try{
         const {id}=res.locals.JwtPayload.user;
         
@@ -34,7 +35,7 @@ console.log(error);
     }
 }
 
-const deleteexp=async(req:Request,res:Response)=>{
+const deleteexp=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
         const result=await pool.query('delete from experience where expid=$1',[id]);
@@ -44,4 +45,4 @@ const deleteexp=async(req:Request,res:Response)=>{
         console.log(error);
     }
 }
-export {postexp,updateexp,getexp,deleteexp};
+module.exports= {postexp,updateexp,getexp,deleteexp};

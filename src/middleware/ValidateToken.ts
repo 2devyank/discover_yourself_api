@@ -1,20 +1,22 @@
-import { NextFunction, Request, Response } from "express";
-import jwt,{JwtPayload} from "jsonwebtoken";
-import { SECRET_Key } from "../controller/UserController.js";
-
-export interface CustomRequest extends Request{
-    token:string|JwtPayload;
-}
-interface Big{
-    user:u,
-    iat:string,
-    exp:string
-}
-interface u{
-    name:string,
-    eamil:string,id:number
-}
-const validateUser=async(req:Request,res:Response,next:NextFunction)=>{
+// import { NextFunction, Request, Response } from "express";
+const jwt=require('jsonwebtoken');
+// const NextFunction=require('express')
+// import jwt,{JwtPayload} from "jsonwebtoken";
+// import { SECRET_Key } from "../controller/UserController.js";
+const {SECRET_Key}=require('../controller/UserController')
+// export interface CustomRequest extends Request{
+//     token:string;
+// }
+// interface Big{
+//     user:u,
+//     iat:string,
+//     exp:string
+// }
+// interface u{
+//     name:string,
+//     eamil:string,id:number
+// }
+const validateUser=async(req:any,res:any,next:any)=>{
 try{
 
     const token=req.header('Authorization')?.replace('Bearer ','');
@@ -36,4 +38,4 @@ try{
 
 } 
 
-export {validateUser};
+module.exports=validateUser;

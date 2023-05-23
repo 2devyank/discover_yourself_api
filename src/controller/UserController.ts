@@ -1,18 +1,22 @@
-import { pool } from "../Database.js";
-import {Response,Request} from "express";
-import bcrypt from "bcrypt";
-import jwt,{Secret} from "jsonwebtoken";
-import dotenv from "dotenv";
+// import { pool } from "../Database.js";
+const pool=require('../Database')
+// import {Response,Request} from "express";
+// import bcrypt from "bcrypt";
+const bcrypt=require('bcrypt')
+// import jwt,{Secret} from "jsonwebtoken";
+const jwt=require('jsonwebtoken');
+// import dotenv from "dotenv";
+const dotenv=require('dotenv');
 dotenv.config();
 
 
-import { CustomRequest } from "../middleware/ValidateToken.js";
-export const SECRET_Key:Secret='devyanknagpal';
+// import { CustomRequest } from "../middleware/ValidateToken.js";
+ const SECRET_Key='devyanknagpal';
 
 
 
 
-const registeruser =async(req:Request,res:Response)=>{
+const registeruser =async(req:any,res:any)=>{
     try{
         const {email,password}=req.body;
         if(!email||!password){
@@ -27,12 +31,12 @@ const registeruser =async(req:Request,res:Response)=>{
         console.log(error);
             }
 }
-const loginuser =async(req:Request,res:Response)=>{
+const loginuser =async(req:any,res:any)=>{
     try{
 const {email,password}=req.body;
 if(!email||!password){
     res.status(404);
-    throw new Error("email & password are amdatory");
+    throw new Error("email & password are amdatory in login");
 }
     const user =await pool.query("SELECT * FROM PROFILE WHERE email=$1 ",[email]) 
     if(user&&(await bcrypt.compare(password,user.rows[0].password))){
@@ -54,7 +58,7 @@ if(!email||!password){
     }
 }
 
-const getuser=async(req:Request,res:Response)=>{
+const getuser=async(req:any,res:any)=>{
     try{
 const {id}=res.locals.JwtPayload.user;
 console.log(id);
@@ -67,13 +71,13 @@ console.log(error);
 
 }
 
-const updateuser=async(req:Request,res:Response)=>{
+const updateuser=async(req:any,res:any)=>{
     try{
        
 const {id}=req.params;
 
-        const {name,email,skills,portfoilo,expertise,about}=req.body;
-const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 where id=$7',[name,email,skills,portfoilo,expertise,about,id])
+        const {name,email,skills,portfoilo,expertise,about,available}=req.body;
+const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 available=$7 where id=$8',[name,email,skills,portfoilo,expertise,about,available,id])
    res.json(ret.rows)
 }catch(error){
         console.log(error);
@@ -81,5 +85,5 @@ const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfo
 }
 
 
-
-export {registeruser,loginuser,getuser,updateuser};
+// module.exports=registeruser
+module.exports={registeruser,loginuser,getuser,updateuser,SECRET_Key};

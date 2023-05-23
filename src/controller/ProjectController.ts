@@ -1,8 +1,9 @@
-import { pool } from "../Database.js";
-import {Response,Request} from "express";
+// import { pool } from "../Database.js";
+// import {Response,Request} from "express";
 
+const pool=require('../Database')
 
-const postproject=async(req:Request,res:Response)=>{
+const postproject=async(req:any,res:any)=>{
     try{
         const {id}=res.locals.JwtPayload.user;
 const {title,description,tags,source,deploy}=req.body;
@@ -13,7 +14,7 @@ const result=pool.query('insert into project (userid,title,description,tags,sour
     }
 }
 
-const getproject=async(req:Request,res:Response)=>{
+const getproject=async(req:any,res:any)=>{
     try{
         const {id}=res.locals.JwtPayload.user;
         const result=await pool.query('select * from project where userid=$1',[id]);
@@ -22,7 +23,7 @@ const getproject=async(req:Request,res:Response)=>{
 console.log(error);
     }
 }
-const updateproject=async(req:Request,res:Response)=>{
+const updateproject=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
   
@@ -33,7 +34,7 @@ const updateproject=async(req:Request,res:Response)=>{
         console.log(error);
     }
 }
-const deleteproject=async(req:Request,res:Response)=>{
+const deleteproject=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
         const result=pool.query('delete from project where projectid=$1',[id])
@@ -43,4 +44,4 @@ const deleteproject=async(req:Request,res:Response)=>{
     }
 }
 
-export {postproject,getproject,updateproject,deleteproject};
+module.exports= {postproject,getproject,updateproject,deleteproject};
