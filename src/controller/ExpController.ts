@@ -34,7 +34,15 @@ const getexp=async(req:any,res:any)=>{
 console.log(error);
     }
 }
-
+const getexpbyexpid=async(req:any,res:any)=>{
+    try{
+        const {id}=req.params;
+        const result=await pool.query('select * from experience where expid=$1',[id]);
+        res.json(result.rows);
+    }catch(error){
+console.log(error);
+    }
+}
 const deleteexp=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
@@ -45,4 +53,4 @@ const deleteexp=async(req:any,res:any)=>{
         console.log(error);
     }
 }
-module.exports= {postexp,updateexp,getexp,deleteexp};
+module.exports= {postexp,updateexp,getexp,deleteexp,getexpbyexpid};

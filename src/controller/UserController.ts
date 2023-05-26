@@ -77,7 +77,7 @@ const updateuser=async(req:any,res:any)=>{
 const {id}=req.params;
 
         const {name,email,skills,portfoilo,expertise,about,available}=req.body;
-const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6 available=$7 where id=$8',[name,email,skills,portfoilo,expertise,about,available,id])
+const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfoilo=$4,expertise=$5,about=$6,available=$7 where id=$8',[name,email,skills,portfoilo,expertise,about,available,id])
    res.json(ret.rows)
 }catch(error){
         console.log(error);
