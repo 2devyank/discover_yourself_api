@@ -27,7 +27,7 @@ const getprojectbyproid=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
         const result=await pool.query('select * from project where projectid=$1',[id]);
-        res.json(result.rows);
+        res.json(result.rows[0]);
     }catch(error){
 console.log(error);
     }

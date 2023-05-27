@@ -47,7 +47,7 @@ if(!email||!password){
                 id:user.rows[0].id
             }
         }, SECRET_Key,
-        {expiresIn:'1h'}
+        {expiresIn:'2h'}
 
         )
 
@@ -83,7 +83,25 @@ const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfo
         console.log(error);
     }
 }
+const getalluser=async(req:any,res:any)=>{
+    try{
+const filter=req.query;
+console.log(filter);
+if(Object.keys(filter).length===0){
+    console.log('hello')
+    const ret=await pool.query('select * from profile');
+    res.json(ret.rows)
+}else{
+    console.log('bye')
+    const ret=await pool.query('select * from profile where $1=ANY(skills) or $2=ANY(available)',[filter.skills,filter.available]);
+    res.json(ret.rows)
+}
 
+    }catch(error){
+console.log(error);
+    }
+
+}
 
 // module.exports=registeruser
-module.exports={registeruser,loginuser,getuser,updateuser,SECRET_Key};
+module.exports={registeruser,loginuser,getuser,updateuser,getalluser,SECRET_Key};
