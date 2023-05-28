@@ -86,13 +86,22 @@ const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfo
 const getalluser=async(req:any,res:any)=>{
     try{
 const filter=req.query;
-console.log(filter);
-if(Object.keys(filter).length===0){
-    console.log('hello')
-    const ret=await pool.query('select * from profile');
+// if(Object.values(filter)÷)
+
+console.log(filter.skills==='');
+
+const page=req.query.page;
+const limit=req.query.limit;
+
+const offset=page*limit;
+console.log(offset);
+
+if(filter.skills==='' && filter.available===''){
+   
+    const ret=await pool.query('select * from profile offset $1 limit $2',[offset,limit]);
     res.json(ret.rows)
 }else{
-    console.log('bye')
+   
     const ret=await pool.query('select * from profile where $1=ANY(skills) or $2=ANY(available)',[filter.skills,filter.available]);
     res.json(ret.rows)
 }
