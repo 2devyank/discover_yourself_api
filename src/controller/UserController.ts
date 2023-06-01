@@ -88,7 +88,9 @@ const getalluser=async(req:any,res:any)=>{
 const filter=req.query;
 // if(Object.values(filter)÷)
 
-console.log(filter.skills==='');
+console.log(filter.skills);
+const filterarray=filter.skills.split(',');
+console.log(filterarray);
 
 const page=req.query.page;
 const limit=req.query.limit;
@@ -96,13 +98,16 @@ const limit=req.query.limit;
 const offset=page*limit;
 console.log(offset);
 
+filterarray.map((data:string)=>{
+    console.log(data);
+})
 if(filter.skills==='' && filter.available===''){
    
     const ret=await pool.query('select * from profile offset $1 limit $2',[offset,limit]);
     res.json(ret.rows)
 }else{
    
-    const ret=await pool.query('select * from profile where $1=ANY(skills) or $2=ANY(available)',[filter.skills,filter.available]);
+       const ret=await pool.query('select * from profile where $1=ANY(skills) or $2=ANY(available)',[filterarray,filter.available]);
     res.json(ret.rows)
 }
 
