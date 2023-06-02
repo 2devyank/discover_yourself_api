@@ -37,42 +37,54 @@ cors:{
 },
 });
 
-interface user {
-id:string,
-available:string,
-room:string
-}
+
 
 const CHAT_BOT='ChatBot';
 let chatRoom='';
-let allUsers:user[]=[];
-let chatRoomUsers:user[]=[];
+
+interface messdata{
+    room:string,
+    message:string,
+    author:string,
+    time:TimeRanges
+}
 
 io.on('connection',(socket:any)=>{
-console.log(`User connected ${socket.id}` )
+console.log(`User connected ${socket.id}` );
 
-socket.on('join_room',(data: { available: string; room: string; })=>{
-    const {available,room}=data;
-    socket.join(room);
-    
-    let __cretedtime__=Date.now();
-    socket.to(room).emit('receive_message',{
-        message:`${available} has joined the chat room`,
-        username:CHAT_BOT,
-        __cretedtime__,
-    }) 
-    socket.emit('receive_message',{
-        message:`Welcome ${available}`,
-        username:CHAT_BOT,
-        __cretedtime__,
-    })
-    chatRoom=room;
-    allUsers.push({id:socket.id,available,room});
-    chatRoomUsers=allUsers.filter((user)=>user.room===room);
-    socket.to(room).emit('chatroom_users',chatRoomUsers);
-    socket.emit('chatroom_users',chatRoomUsers);
-
+socket.on("join_room",(data:{room:string})=>{
+    socket.join(data);
+    console.log(`USer with ID :${socket.id} join room with ${data}`)
 })
+socket.on("send_message",(data:messdata)=>{
+    console.log(data);
+})
+socket.on('disconnect',()=>{
+    console.log(`User disconnected ${socket.id}`);
+})
+
+// socket.on('join_room',(data: { userref:string,available: string; })=>{
+//     const {userref,available}=data;
+//     socket.join(available);
+    
+//     let __cretedtime__=Date.now();
+//     socket.to(available).emit('receive_message',{
+//         message:`${userref} has joined the chat room`,
+//         username:CHAT_BOT,
+//         __cretedtime__,
+//     }) 
+//     socket.emit('receive_message',{
+//         message:`Welcome ${userref}`,
+//         username:CHAT_BOT,
+//         __cretedtime__,
+//     })
+//     chatRoom=available;
+//     allUsers.push({id:socket.id,userref,available});
+//     chatRoomUsers=allUsers.filter((user)=>user.available===available);
+//     socket.to(available).emit('chatroom_users',chatRoomUsers);
+//     socket.emit('chatroom_users',chatRoomUsers);
+
+// })
 })
 
 const PORT=process.env.PORT;
