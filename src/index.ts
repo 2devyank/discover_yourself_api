@@ -26,6 +26,8 @@ app.use(express.json());
 const router=require('./router/UserRouter');
 const projectrouter=require('./router/ProjectRouter')
 const exprouter=require('./router/ExpRouter')
+const feedrouter=require('./router/FeedRouter')
+// const feedrouter=require('./router/FeedRouter')
 // import projectrouter from "./router/ProjectRouter.js";
 // import exprouter from "./router/ExpRouter.js";
 const server=http.createServer(app);
@@ -39,8 +41,7 @@ cors:{
 
 
 
-const CHAT_BOT='ChatBot';
-let chatRoom='';
+
 
 interface messdata{
     room:string,
@@ -58,39 +59,20 @@ socket.on("join_room",(data:{room:string})=>{
 })
 socket.on("send_message",(data:messdata)=>{
     console.log(data);
+    socket.to(data.room).emit("receive_message",data);
 })
 socket.on('disconnect',()=>{
     console.log(`User disconnected ${socket.id}`);
 })
 
-// socket.on('join_room',(data: { userref:string,available: string; })=>{
-//     const {userref,available}=data;
-//     socket.join(available);
-    
-//     let __cretedtime__=Date.now();
-//     socket.to(available).emit('receive_message',{
-//         message:`${userref} has joined the chat room`,
-//         username:CHAT_BOT,
-//         __cretedtime__,
-//     }) 
-//     socket.emit('receive_message',{
-//         message:`Welcome ${userref}`,
-//         username:CHAT_BOT,
-//         __cretedtime__,
-//     })
-//     chatRoom=available;
-//     allUsers.push({id:socket.id,userref,available});
-//     chatRoomUsers=allUsers.filter((user)=>user.available===available);
-//     socket.to(available).emit('chatroom_users',chatRoomUsers);
-//     socket.emit('chatroom_users',chatRoomUsers);
-
-// })
+ 
 })
 
 const PORT=process.env.PORT;
 app.use("/",router)
 app.use("/",projectrouter)
 app.use("/",exprouter)
+app.use("/",feedrouter)
 
 
 
