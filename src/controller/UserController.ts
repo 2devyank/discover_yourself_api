@@ -70,6 +70,16 @@ console.log(error);
     }
 
 }
+const getuserbyid=async(req:any,res:any)=>{
+    try{
+const {id}=req.params;
+const ret=await pool.query('select * from profile where id=$1',[id])
+res.json(ret.rows[0])
+    }catch(error){
+console.log(error);
+    }
+
+}
 
 const updateuser=async(req:any,res:any)=>{
     try{
@@ -118,4 +128,4 @@ console.log(error);
 }
 
 // module.exports=registeruser
-module.exports={registeruser,loginuser,getuser,updateuser,getalluser,SECRET_Key};
+module.exports={registeruser,loginuser,getuser,updateuser,getalluser,getuserbyid,SECRET_Key};
