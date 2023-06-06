@@ -27,6 +27,8 @@ const router=require('./router/UserRouter');
 const projectrouter=require('./router/ProjectRouter')
 const exprouter=require('./router/ExpRouter')
 const feedrouter=require('./router/FeedRouter')
+const conrouter=require('./router/ConRouter')
+const mesrouter=require('./router/MessRouter')
 // const feedrouter=require('./router/FeedRouter')
 // import projectrouter from "./router/ProjectRouter.js";
 // import exprouter from "./router/ExpRouter.js";
@@ -73,6 +75,8 @@ app.use("/",router)
 app.use("/",projectrouter)
 app.use("/",exprouter)
 app.use("/",feedrouter)
+app.use("/",conrouter)
+app.use("/",mesrouter)
 
 
 

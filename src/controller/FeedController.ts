@@ -24,7 +24,7 @@ console.log(error);
 }
 const getfeed=async(req:any,res:any)=>{
     try{
-        const {id}=res.locals.JwtPayload.user;
+        
         
         const result=await pool.query('select * from feed ');
         res.json(result.rows);
