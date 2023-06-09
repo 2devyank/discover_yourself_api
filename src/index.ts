@@ -52,19 +52,56 @@ interface messdata{
     time:TimeRanges
 }
 
+interface tog{
+    userid:string,
+    socketId:string
+}
+let users:tog[]=[]
+
+const addUser=(userid:string,socketId:string)=>{
+!users.some((user)=>user.userid===userid)&&
+users.push({userid,socketId})
+}
+const removeUser=(socketId:string)=>{
+users=users.filter((user)=>user.socketId!==socketId);
+}
+const getUser=(userid:string)=>{
+    return users.find((user)=>user.userid===userid);
+}
+
 io.on('connection',(socket:any)=>{
 console.log(`User connected ${socket.id}` );
+io.emit('welcome','hello user hi there')
 
-socket.on("join_room",(data:{room:string})=>{
-    socket.join(data);
-    console.log(`USer with ID :${socket.id} join room with ${data}`)
+socket.on('addUser',(user:string)=>{
+addUser(user,socket.id)
+io.emit("getUsers",users);
 })
-socket.on("send_message",(data:messdata)=>{
-    console.log(data);
-    socket.to(data.room).emit("receive_message",data);
+console.log(users);
+
+socket.on("sendMessage",({sender,receiverId,text,con_id}:{sender:string,receiverId:string,text:string,con_id:number})=>{
+    console.log(receiverId)
+const user=getUser(receiverId);
+console.log(user);
+io.to(user?.socketId).emit("getMessage",{
+    sender,
+    text,
+    con_id
 })
+console.log('mes emit')
+})
+
+// socket.on("join_room",(data:{room:string})=>{
+//     socket.join(data);
+//     console.log(`USer with ID :${socket.id} join room with ${data}`)
+// })
+// socket.on("send_message",(data:messdata)=>{
+//     console.log(data);
+//     socket.to(data.room).emit("receive_message",data);
+// })
 socket.on('disconnect',()=>{
-    console.log(`User disconnected ${socket.id}`);
+    console.log(`User disconnected `);
+    removeUser(socket.id);
 })
 
  
