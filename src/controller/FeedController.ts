@@ -3,10 +3,11 @@ const pool=require('../Database')
 
 const postfeed=async(req:any,res:any)=>{
     try{
+        // const {id}=req.params;
         const {id}=res.locals.JwtPayload.user;
-const {text}=req.body;
-const result=await pool.query('insert into feed (text,profile_id) values ($1,$2)',[text,id])
-res.json(result.rows)   
+const {text,url,img}=req.body;
+const result=await pool.query('insert into feed (text,profile_id,url,img) values ($1,$2,$3,$4)',[text,id,url,img])
+res.json(result)   
 }catch(error){
 console.log(error);
     }
@@ -15,8 +16,8 @@ console.log(error);
 const updatefeed=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
-        const {text}=req.body;
-        const result=await pool.query('update feed set text=$1 where id=$2 ',[text,id])
+        const {text,url}=req.body;
+        const result=await pool.query('update feed set text=$1,url=$3 where id=$2 ',[text,id,url])
         res.json(result);
     }catch(error){
 console.log(error);

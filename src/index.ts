@@ -91,7 +91,7 @@ io.to(user?.socketId).emit("getMessage",{
 console.log('mes emit')
 })
 
-// socket.on("join_room",(data:{room:string})=>{
+// socket.on("private_room",(data:{room:string})=>{
 //     socket.join(data);
 //     console.log(`USer with ID :${socket.id} join room with ${data}`)
 // })
