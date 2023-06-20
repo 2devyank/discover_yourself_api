@@ -16,13 +16,15 @@ console.log(error);
 const updatefeed=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
-        const {text,url}=req.body;
-        const result=await pool.query('update feed set text=$1,url=$3 where id=$2 ',[text,id,url])
+        const {love,num}=req.body;
+        const result=await pool.query('update feed set love=$1,lovetag=array_append(lovetag,$3) where id=$2 ',[love,id,num])
         res.json(result);
     }catch(error){
 console.log(error);
     }
 }
+
+
 const getfeed=async(req:any,res:any)=>{
     try{
         
@@ -33,6 +35,17 @@ const getfeed=async(req:any,res:any)=>{
 console.log(error);
     }
 }
+const getfeedbyid=async(req:any,res:any)=>{
+    try{
+        
+        const {id}=req.params;
+        const result=await pool.query('select feed.text,feed.url,feed.img,feed.love,feed.comments,profile.name,profile.expertise from profile,feed where feed.profile_id=profile.id and feed.id=$1',[id]);
+        res.json(result.rows);
+    }catch(error){
+console.log(error);
+    }
+}
+
 const deletefeed=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
@@ -44,4 +57,4 @@ const deletefeed=async(req:any,res:any)=>{
     }
 }
 
-module.exports={deletefeed,getfeed,updatefeed,postfeed};
+module.exports={deletefeed,getfeed,updatefeed,postfeed,getfeedbyid};
