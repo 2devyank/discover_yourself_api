@@ -99,14 +99,15 @@ const filter=req.query;
 // if(Object.values(filter)÷)
 
 console.log(filter.skills);
+
 const filterarray=filter.skills.split(',');
-console.log(filterarray);
+const filterav=filter.available.split(',');
 
 const page=req.query.page;
 const limit=req.query.limit;
 
 const offset=page*limit;
-console.log(offset);
+
 
 
 if(filter.skills==='' && filter.available===''){
@@ -115,7 +116,7 @@ if(filter.skills==='' && filter.available===''){
     res.json(ret.rows)
 }else{
    
-       const ret=await pool.query('select * from profile where $1 && skills or $2=ANY(available)',[filterarray,filter.available]);
+       const ret=await pool.query('select * from profile where $1 && skills or $2 && available offset $3 limit $4',[filterarray,filterav,offset,limit]);
     res.json(ret.rows)
 }
 

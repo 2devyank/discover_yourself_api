@@ -27,7 +27,7 @@ const getfeed=async(req:any,res:any)=>{
     try{
         
         
-        const result=await pool.query('select * from feed ');
+        const result=await pool.query('select feed.text,feed.url,feed.img,feed.love,feed.comments,profile.name,profile.expertise from profile,feed where feed.profile_id=profile.id;');
         res.json(result.rows);
     }catch(error){
 console.log(error);
