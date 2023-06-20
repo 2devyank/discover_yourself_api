@@ -32,6 +32,15 @@ const getprojectbyproid=async(req:any,res:any)=>{
 console.log(error);
     }
 }
+const getprojectbyprofileid=async(req:any,res:any)=>{
+    try{
+        const {id}=req.params;
+        const result=await pool.query('select * from project where userid=$1',[id]);
+        res.json(result.rows[0]);
+    }catch(error){
+console.log(error);
+    }
+}
 const updateproject=async(req:any,res:any)=>{
     try{
         const {id}=req.params;
@@ -53,4 +62,4 @@ const deleteproject=async(req:any,res:any)=>{
     }
 }
 
-module.exports= {postproject,getproject,updateproject,deleteproject,getprojectbyproid};
+module.exports= {postproject,getproject,updateproject,deleteproject,getprojectbyprofileid,getprojectbyproid};
