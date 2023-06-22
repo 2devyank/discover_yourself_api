@@ -12,7 +12,7 @@ const validateUser=require('../middleware/ValidateToken')
 const feedrouter=express.Router();
 
 feedrouter.route("/feed").post(validateUser,postfeed);
-feedrouter.route("/feed").get(getfeed);
+feedrouter.route("/feed/:page").get(getfeed);
 
 
 feedrouter.route("/feed/:id").put(updatefeed).delete(deletefeed).get(getfeedbyid);

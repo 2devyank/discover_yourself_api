@@ -93,6 +93,19 @@ const ret=await pool.query('update profile set name=$1,email=$2,skills=$3,portfo
         console.log(error);
     }
 }
+
+const getusernames=async(req:any,res:any)=>{
+    try{
+const {name}=req.params;
+const ret=await pool.query("select name,id from profile where name like '%'||$1||'%'",[name])
+res.json(ret.rows)
+    }catch(error){
+console.log(error);
+    }
+
+}
+
+
 const getalluser=async(req:any,res:any)=>{
     try{
 const filter=req.query;
@@ -127,4 +140,4 @@ console.log(error);
 }
 
 // module.exports=registeruser
-module.exports={registeruser,loginuser,getuser,updateuser,getalluser,getuserbyid,SECRET_Key};
+module.exports={getusernames,registeruser,loginuser,getuser,updateuser,getalluser,getuserbyid,SECRET_Key};
