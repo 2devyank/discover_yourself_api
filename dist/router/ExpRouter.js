@@ -1,13 +1,18 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const ExpController_js_1 = require("../controller/ExpController.js");
-const ValidateToken_js_1 = require("../middleware/ValidateToken.js");
-const exprouter = express_1.default.Router();
-exprouter.route("/exp").post(ValidateToken_js_1.validateUser, ExpController_js_1.postexp);
-exprouter.route("/exp").get(ValidateToken_js_1.validateUser, ExpController_js_1.getexp);
-exprouter.route("/exp/:id").put(ExpController_js_1.updateexp).delete(ExpController_js_1.deleteexp);
-exports.default = exprouter;
+// import express from 'express'
+const express = require('express');
+// import { deleteexp, getexp, postexp, updateexp } from '../controller/ExpController.js';
+// import { validateUser } from '../middleware/ValidateToken.js';
+const { postexp } = require('../controller/ExpController');
+const { getexp } = require('../controller/ExpController');
+const { deleteexp } = require('../controller/ExpController');
+const { updateexp } = require('../controller/ExpController');
+const { getexpbyexpid } = require('../controller/ExpController');
+const validateUser = require('../middleware/ValidateToken');
+const exprouter = express.Router();
+exprouter.route("/exp").post(validateUser, postexp);
+exprouter.route("/exp").get(validateUser, getexp);
+exprouter.route("/exp/:id").get(getexpbyexpid);
+exprouter.route("/exp/:id").put(updateexp).delete(deleteexp);
+module.exports = exprouter;

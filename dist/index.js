@@ -1,31 +1,97 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const cors_1 = __importDefault(require("cors"));
-const dot = dotenv_1.default.config();
-const app = (0, express_1.default)();
-const body_parser_1 = __importDefault(require("body-parser"));
-app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
-const UserRouter_js_1 = __importDefault(require("./router/UserRouter.js"));
-const ProjectRouter_js_1 = __importDefault(require("./router/ProjectRouter.js"));
-const ExpRouter_js_1 = __importDefault(require("./router/ExpRouter.js"));
+// import express,{Express,Request,Response} from "express";
+// import dotenv from "dotenv";
+// import cors from "cors";
+const cors = require('cors');
+const pool = require('./Database');
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+const express = require('express');
+const bodyParser = require('body-parser');
+const registeruser = require('./controller/UserController');
+const { Server } = require('socket.io');
+const http = require('http');
+const dot = dotenv.config();
+const app = express();
+// import bodyParser from "body-parser";
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json());
+// import router from "./router/UserRouter.js";
+const router = require('./router/UserRouter');
+const projectrouter = require('./router/ProjectRouter');
+const exprouter = require('./router/ExpRouter');
+const feedrouter = require('./router/FeedRouter');
+const conrouter = require('./router/ConRouter');
+const mesrouter = require('./router/MessRouter');
+// const feedrouter=require('./router/FeedRouter')
+// import projectrouter from "./router/ProjectRouter.js";
+// import exprouter from "./router/ExpRouter.js";
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+    },
+});
+let users = [];
+const addUser = (userid, socketId) => {
+    !users.some((user) => user.userid === userid) &&
+        users.push({ userid, socketId });
+};
+const removeUser = (socketId) => {
+    users = users.filter((user) => user.socketId !== socketId);
+};
+const getUser = (userid) => {
+    return users.find((user) => user.userid === userid);
+};
+io.on('connection', (socket) => {
+    console.log(`User connected ${socket.id}`);
+    io.emit('welcome', 'hello user hi there');
+    socket.on('addUser', (user) => {
+        addUser(user, socket.id);
+        io.emit("getUsers", users);
+    });
+    console.log(users);
+    socket.on("sendMessage", ({ sender, receiverId, text, con_id }) => {
+        console.log(receiverId);
+        const user = getUser(receiverId);
+        console.log(user);
+        io.to(user?.socketId).emit("getMessage", {
+            sender,
+            text,
+            con_id
+        });
+        console.log('mes emit');
+    });
+    // socket.on("private_room",(data:{room:string})=>{
+    //     socket.join(data);
+    //     console.log(`USer with ID :${socket.id} join room with ${data}`)
+    // })
+    // socket.on("send_message",(data:messdata)=>{
+    //     console.log(data);
+    //     socket.to(data.room).emit("receive_message",data);
+    // })
+    socket.on('disconnect', () => {
+        console.log(`User disconnected `);
+        removeUser(socket.id);
+    });
+});
 const PORT = process.env.PORT;
-app.use("/", UserRouter_js_1.default);
-app.use("/", ProjectRouter_js_1.default);
-app.use("/", ExpRouter_js_1.default);
+app.use("/", router);
+app.use("/", projectrouter);
+app.use("/", exprouter);
+app.use("/", feedrouter);
+app.use("/", conrouter);
+app.use("/", mesrouter);
 app.post("/", (req, res) => {
     res.send("meassage posted");
 });
 app.delete("/", (req, res) => {
     res.send("meassage deleted");
 });
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`listening on ${PORT}`);
 });
