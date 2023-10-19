@@ -1,12 +1,8 @@
 // import pg from "pg";
 const pg=require('pg');
-
+const connectionString=process.env.DATABASE_URL
 const pool=new pg.Pool({
-    user:"devyanknagpal",
-    password:"",
-    host:"localhost",
-    port:5433,
-    database:"intern"
+    connectionString
 })
 
 module.exports=pool;
