@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // import pg from "pg";
-const pg = require('pg');
-const pool = new pg.Pool({
-    user: "devyanknagpal",
-    password: "",
-    host: "localhost",
-    port: 5433,
-    database: "intern"
+const Pool = require('pg').Pool;
+const dotenv = require("dotenv").config();
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({
+    connectionString
 });
 module.exports = pool;
